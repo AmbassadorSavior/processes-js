@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A small Node.js process API reference and runnable examples.">
+  <title>Node Process | JavaScript Field Notes</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f5f6ef;
+      --ink: #172521;
+      --muted: #59645d;
+      --line: #cbd2c8;
+      --green: #245c43;
+      --lime: #d7ed83;
+      --coral: #c4523c;
+      --code: #172521;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 92% 8%, rgba(215, 237, 131, .38), transparent 28rem),
+        var(--paper);
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.55;
+    }
+
+    a { color: inherit; }
+
+    .wrap {
+      width: min(100% - 40px, 1040px);
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 76px;
+      border-bottom: 1px solid var(--line);
+      font: 600 13px/1.2 "Courier New", monospace;
+      letter-spacing: 0;
+    }
+
+    .brand { color: var(--green); }
+    .edition { color: var(--muted); }
+
+    main { padding: clamp(44px, 8vw, 92px) 0 64px; }
+
+    .intro {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(220px, 310px);
+      gap: 48px;
+      align-items: end;
+      padding-bottom: 50px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: var(--coral);
+      font: 700 12px/1.2 "Courier New", monospace;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 700px;
+      margin: 0;
+      font-size: clamp(48px, 8vw, 92px);
+      font-weight: 400;
+      letter-spacing: 0;
+      line-height: .96;
+    }
+
+    .intro-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .intro-note strong { color: var(--ink); }
+
+    .examples {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      margin-top: 40px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    article {
+      min-width: 0;
+      padding: clamp(22px, 4vw, 38px);
+      background: rgba(255, 255, 255, .62);
+    }
+
+    .number {
+      color: var(--green);
+      font: 700 12px/1.2 "Courier New", monospace;
+    }
+
+    h2 {
+      margin: 18px 0 10px;
+      font-size: 30px;
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+
+    article p { min-height: 54px; margin: 0 0 22px; color: var(--muted); }
+
+    .file-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 44px;
+      padding: 0 14px;
+      background: var(--green);
+      color: white;
+      font: 700 13px/1 "Courier New", monospace;
+      text-decoration: none;
+    }
+
+    .file-link:hover, .file-link:focus-visible { background: var(--ink); }
+    .file-link:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
+
+    .run {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: center;
+      margin-top: 38px;
+      padding: 24px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .run h2 { margin: 0 0 6px; font-size: 22px; }
+    .run p { margin: 0; color: var(--muted); }
+
+    pre {
+      margin: 0;
+      padding: 13px 16px;
+      overflow-x: auto;
+      background: var(--code);
+      color: var(--lime);
+      font: 14px/1.5 "Courier New", monospace;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 20px 0 28px;
+      color: var(--muted);
+      font: 12px/1.5 "Courier New", monospace;
+    }
+
+    @media (max-width: 680px) {
+      .wrap { width: min(100% - 28px, 1040px); }
+      header { min-height: 64px; }
+      .intro { grid-template-columns: 1fr; gap: 22px; }
+      .intro-note { max-width: 440px; }
+      .examples { grid-template-columns: 1fr; }
+      article p { min-height: 0; }
+      .run { grid-template-columns: 1fr; gap: 14px; align-items: start; }
+      footer { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a class="brand" href="./">PROCESS / JS</a>
+      <span class="edition">NODE.JS FIELD NOTES&nbsp; 01</span>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">Runtime essentials</p>
+          <h1 id="page-title">The process, up close.</h1>
+        </div>
+        <p class="intro-note"><strong>Node's `process` object</strong> exposes information and controls for the running program. These examples are Node.js scripts, not browser scripts.</p>
+      </section>
+
+      <section class="examples" aria-label="Runnable examples">
+        <article>
+          <span class="number">EXAMPLE 01 / INSPECT</span>
+          <h2>Read the runtime</h2>
+          <p>Print the current process ID, Node version, platform, memory use, arguments, and lifecycle events.</p>
+          <a class="file-link" href="./process.js">Open process.js <span aria-hidden="true">&rarr;</span></a>
+        </article>
+        <article>
+          <span class="number">EXAMPLE 02 / EXIT</span>
+          <h2>End the process</h2>
+          <p>See a minimal process start and termination sequence, with an explicit successful exit code.</p>
+          <a class="file-link" href="./exit.js">Open exit.js <span aria-hidden="true">&rarr;</span></a>
+        </article>
+      </section>
+
+      <section class="run" aria-labelledby="run-title">
+        <div>
+          <h2 id="run-title">Run locally with Node.js</h2>
+          <p>Download or clone the project, then run either example from its folder.</p>
+        </div>
+        <pre><code>node process.js
+node exit.js</code></pre>
+      </section>
+    </main>
+
+    <footer>
+      <span>STATIC PAGE / GITHUB PAGES</span>
+      <span>Scripts require Node.js and do not run in a browser.</span>
+    </footer>
+  </div>
+</body>
+</html>
